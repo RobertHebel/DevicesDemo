@@ -1,40 +1,38 @@
 import Grid from '@mui/material/Unstable_Grid2'
-import React from 'react'
-import { Paper, styled } from '@mui/material'
-import { useQuery } from '@tanstack/react-query' // Grid version 2
+import React, { useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { DevicesListTable } from './DevicesListTable'
+import { API_DEVICES_LIST } from '../const/api'
+import { DevicesItemWrapper } from './DevicesItemWrapper'
 
-const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-    ...theme.typography.body2,
-    padding: theme.spacing(2),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-}))
 export const Dashboard = () => {
     const { isLoading, error, data } = useQuery({
-        queryKey: ['repoData'],
-        queryFn: () =>
-            fetch(
-                'https://api.github.com/repos/tannerlinsley/react-query'
-            ).then((res) => res.json()),
+        queryKey: ['devicesData'],
+        queryFn: () => fetch(API_DEVICES_LIST).then((res) => res.json()),
     })
 
-    console.log('data', data)
+    const [selectedDevices, setSelectedDevices]: any = useState([])
 
     return (
-        <Grid
-            container
-            mt={2}
-            ml={2}
-            mr={2}
-            spacing={{ xs: 2, md: 3 }}
-            columns={{ xs: 4, sm: 8, md: 12 }}
-        >
-            {Array.from(Array(6)).map((_, index) => (
-                <Grid xs={2} sm={4} md={4} key={index}>
-                    <Item>xs=2</Item>
-                </Grid>
-            ))}
-        </Grid>
+        <>
+            {!isLoading && !error && (
+                <DevicesListTable
+                    devicesList={data}
+                    setSelectedDevices={setSelectedDevices}
+                />
+            )}
+            <Grid
+                container
+                mt={2}
+                ml={2}
+                mr={2}
+                spacing={{ xs: 2, md: 3 }}
+                columns={{ xs: 4, sm: 8, md: 12 }}
+            >
+                {selectedDevices && (
+                    <DevicesItemWrapper selectedDevices={selectedDevices} />
+                )}
+            </Grid>
+        </>
     )
 }

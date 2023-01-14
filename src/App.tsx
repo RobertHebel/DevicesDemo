@@ -1,8 +1,7 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-import {HomePage} from "./pages/home/home-page";
+import React from 'react'
+import './App.css'
+import { HomePage } from './pages/home/HomePage'
 
-const App = () => <HomePage/>
+const App = () => <HomePage />
 
-export default App;
+export default App
